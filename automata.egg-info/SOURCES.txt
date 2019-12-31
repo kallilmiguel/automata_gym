@@ -1,0 +1,6 @@
+setup.py
+automata.egg-info/PKG-INFO
+automata.egg-info/SOURCES.txt
+automata.egg-info/dependency_links.txt
+automata.egg-info/requires.txt
+automata.egg-info/top_level.txt
