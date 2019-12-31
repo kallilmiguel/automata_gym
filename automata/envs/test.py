@@ -10,11 +10,12 @@ import gym
 
 env = gym.make('automata:automata-v0')
 
-env.reset("teste.xml")
+env.reset("SM/teste.xml")
 
 env.render()
 
 env.mapping()
+
 env.step(0)
 env.step(1)
 env.step(2)
