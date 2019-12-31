@@ -6,7 +6,6 @@ Created on Thu Dec 26 15:25:46 2019
 @author: kallil
 """
 from IPython.display import Image, display
-from XMLReader import parse
 import pygraphviz as pgv
 
 def plotSM(states, terminal, initial_state, actual_state, last_state, actions, transitions, width, height, prog, sep):
@@ -23,7 +22,7 @@ def plotSM(states, terminal, initial_state, actual_state, last_state, actions, t
                 n.attr['shape'] = 'doublecircle'
             if(i == actual_state):
                 n = G.get_node(i)
-                n.attr['color'] = 'gold'
+                n.attr['color'] = 'green'
             elif(i==last_state):
                 n = G.get_node(i)
                 n.attr['color'] = 'purple'
@@ -31,12 +30,12 @@ def plotSM(states, terminal, initial_state, actual_state, last_state, actions, t
             G.add_node(i, shape='doublecircle')
             if(i == actual_state):
                 n = G.get_node(i)
-                n.attr['color'] = 'gold'
+                n.attr['color'] = 'green'
             elif(i==last_state):
                 n = G.get_node(i)
                 n.attr['color'] = 'purple'
         elif(i == actual_state):
-            G.add_node(i, color='gold')
+            G.add_node(i, color='green')
         elif(i==last_state):
             G.add_node(i, color='purple')
         else:
@@ -46,7 +45,7 @@ def plotSM(states, terminal, initial_state, actual_state, last_state, actions, t
         for j in actions:
             if(i[2] == j[0]):
                 if(i[0] == last_state and i[1] == actual_state):
-                    G.add_edge(i[0], i[1], label = str(j[1]), color = 'purple')
+                    G.add_edge(i[0], i[1], label = str(j[1]), color = 'purple', fontcolor = 'purple')
                 else:
                     G.add_edge(i[0], i[1], label = str(j[1]))                    
                 

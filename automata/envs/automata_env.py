@@ -1,11 +1,7 @@
 import gym
-from gym import error, spaces, utils
-from gym.utils import seeding
-import lxml.etree as et
-import xml.dom.minidom
-from XMLReader import parse
+from gym import spaces
 from pygv import plotSM
-from IPython.display import display, Image
+from XMLReader import parse
 
 class automataEnv(gym.Env):
   metadata = {'render.modes': ['human']}

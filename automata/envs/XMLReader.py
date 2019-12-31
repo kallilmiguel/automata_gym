@@ -8,7 +8,6 @@ Created on Fri Dec 20 17:50:44 2019
 
 import xml.dom.minidom
 
-
 def parse(filename):
     
     doc = xml.dom.minidom.parse(filename)
