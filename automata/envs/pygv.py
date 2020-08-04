@@ -8,7 +8,7 @@ Created on Thu Dec 26 15:25:46 2019
 from IPython.display import Image, display
 import pygraphviz as pgv
 
-def plotSM(states, terminal, initial_state, actual_state, last_state, actions, transitions, width, height, prog, sep):
+def plotSM(states, terminal, initial_state, actual_state, last_state, actions, controllable, transitions, width, height, prog, sep):
     
     G = pgv.AGraph(format='svg', directed=True, nodesep=sep)
     G.add_node(-1, shape='point')
@@ -46,6 +46,8 @@ def plotSM(states, terminal, initial_state, actual_state, last_state, actions, t
             if(i[2] == j[0]):
                 if(i[0] == last_state and i[1] == actual_state):
                     G.add_edge(i[0], i[1], label = str(j[1]), color = 'purple', fontcolor = 'purple')
+                elif(i[2] not in controllable):
+                    G.add_edge(i[0], i[1], label = str(j[1]), color = 'red', fontcolor = 'red')
                 else:
                     G.add_edge(i[0], i[1], label = str(j[1]))                    
                 

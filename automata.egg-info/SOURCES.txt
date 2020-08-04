@@ -1,3 +1,4 @@
+README.txt
 setup.py
 automata.egg-info/PKG-INFO
 automata.egg-info/SOURCES.txt
