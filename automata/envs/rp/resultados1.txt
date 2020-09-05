@@ -1,0 +1,11 @@
+Carro 0 no bloco estendido
+['sM1', -0.882891], ['sO[0]', -0.04163021], ['sRi[0]', -0.06330689]
+
+Carro 0 decidindo retrabalho
+['sM1', -0.014102984], ['sMQ[0]', -0.011831153], ['sMQr', -0.02663107]
+
+Carro 1 no bloco estendido
+['sM1', -0.022291863], ['sO[1]', -0.00906061], ['sRi[1]', 0.0149374865]
+
+Carro 1 decidindo retrabalho
+['sM1', 0.032953504], ['sMQ[0]', 0.014905859], ['sMQr', 0.0144425295]

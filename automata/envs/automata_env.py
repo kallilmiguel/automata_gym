@@ -28,7 +28,7 @@ class automataEnv(gym.Env):
                     done=True
             break
       if(flag==True):
-        #print("Transição inválida - {},{}".format(self.actual_state, action))
+        print("Transição inválida - {},{}".format(self.actual_state, action))
         return self.actual_state, 0, done, {"prob" : 1.0}
       return self.actual_state, self.reward[action], done, {"prob" : 1.0}
   
@@ -105,12 +105,17 @@ class automataEnv(gym.Env):
           
     
 
-  def mapping(self):
+  def mapping(self, index=True):
     """
     Informa para o usuário como estáo mapeados os eventos,
     qual id corresponde a qual label, etc
     """
-    print(self.actions)
+    if(index==True):
+        return self.actions
+    mp=[]
+    for i in range(len(self.actions)):
+        mp.append(self.actions[i][1])
+    return mp
     
 
   def possible_transitions(self):

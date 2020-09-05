@@ -220,7 +220,7 @@ class CustomEpsGreedyQPolicy(Policy):
         # Returns
             Dict of config
         """
-        config = super(EpsGreedyQPolicy, self).get_config()
+        config = super(CustomEpsGreedyQPolicy, self).get_config()
         config['eps'] = self.eps
         return config
 
