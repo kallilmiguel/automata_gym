@@ -10,6 +10,7 @@ import numpy as np
 import gym
 import random
 import csv
+import tensorflow as tf
 
 
 case=1
@@ -31,7 +32,7 @@ probabilities = list(map(float, data[2]))
 
 env = gym.make('automata:automata-v0')
 
-env.reset("SM/Renault.xml", rewards=reward, stop_crit=1, last_action=300, probs=probabilities)
+env.reset("SM/Mesa.xml", rewards=reward, stop_crit=1, last_action=300, probs=probabilities)
 
 
 print("Number of actions: %d" % env.action_space.n)
@@ -49,7 +50,6 @@ from keras.optimizers import Adam
 from policy import CustomEpsGreedyQPolicy
 
 env.reset()
-env.step(env.action_space.sample())[0]
 
 model_only_embedding = Sequential()
 model_only_embedding.add(Embedding(state_size, action_size, input_length=1))

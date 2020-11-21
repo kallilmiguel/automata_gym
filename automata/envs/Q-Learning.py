@@ -14,7 +14,7 @@ from policy import CustomEpsGreedyQPolicy
 
 env = gym.make('automata:automata-v0')
 
-env.reset("SM/BuffDCrash.xml",  [-1,-1,-1,10,-4,-4,-1,-1], 1, 60, probs=[-1,-1,-1,-1,1,1,-1,-1])
+env.reset("SM/BuffDCrash.xml",  [-1,-1,-1,10,-4,-4,-1,-1], 2, 60, probs=[-1,-1,-1,-1,1,1,-1,-1])
 
 num_actions = env.action_space.n
 num_states = env.observation_space.n

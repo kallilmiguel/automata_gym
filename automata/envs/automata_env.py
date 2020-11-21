@@ -9,7 +9,10 @@ class automataEnv(gym.Env):
   metadata = {'render.modes': ['human']}
 
   def __init__(self):
-      ...
+      self.reward=None
+      self.probs=None
+      self.products=None
+      
   def step(self, action):
       flag = True
       done = False
@@ -21,7 +24,12 @@ class automataEnv(gym.Env):
             if(self.stop_crit==0):
                 if(self.actual_state in self.terminal and self.last_action == action):
                     done = True
-                    
+                 
+            elif(self.stop_crit==1):
+                if(action in self.last_action):
+                    self.counter+=1
+                if(self.counter==self.products):
+                    done=True
             else:
                 self.counter+=1
                 if(self.counter >= self.last_action):
@@ -38,13 +46,14 @@ class automataEnv(gym.Env):
   critério de parada para o treinamento e a última ação a ser adotada.
   Se caso o critério de parada for 0, o treinamento encerrará o episódio quando o autômato estiver
   no estado terminal e ao mesmo tempo ocorrer o evento definido como o parâmetro last_action.
-  Caso o critério de parada seja 1, o episódio se encerrará quando forem executados x passos, 
+  Para stop_crit=1, last action se da pelos eventos que fazem com que um produto saia da linha de producao
+  e products sao quantos produtos serao produzidos.
+  Caso o critério de parada seja 2, o episódio se encerrará quando forem executados x passos, 
   sendo x definido por last_action.
   """
-  def reset(self, filename='', rewards=0, stop_crit=0, last_action=0, probs = None):
+  def reset(self, filename='', rewards=0, stop_crit=0, last_action=0, products=None, probs = None):
     self.last_state = -1
     self.counter = 0
-    self.probs=None
     """
     Lê um arquivo XML obtido diretamente do software Supremica, e mapeia todos os estados 
     e transições obtidos a partir daquela estrutura de autômato.
@@ -69,6 +78,11 @@ class automataEnv(gym.Env):
     exemplo, se houver 4 eventos, o vetor de recompensa terá 4 índices, uma recompensa
     para cada ação realizada.
     """
+    if(products):
+        self.products=products
+    else:
+        products=self.products
+            
     if(rewards):
         self.reward = rewards
     else:

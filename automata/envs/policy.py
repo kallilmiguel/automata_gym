@@ -183,36 +183,42 @@ class CustomEpsGreedyQPolicy(Policy):
         # Returns
             Selection action
         """
-        assert q_values.ndim == 1
-        pt = np.array(self.env.possible_transitions())
-        uncontrollable = np.array(self.env.ncontrollable)
-        ptu = np.intersect1d(pt,uncontrollable)
-        if(self.env.probs!=None and ptu.size>0):
-            probability = []
-            for i in range(len(ptu)):
-                if(self.env.probs[ptu[i]]>0):
-                    pt = np.delete(pt, np.where(pt==ptu[i]))
-                    probability.append([ptu[i],self.env.probs[ptu[i]], np.random.uniform(0,1)])
-            random.shuffle(probability)
-            for i in range(len(probability)):
-                if(probability[i][2]<probability[i][1]):
-                    return probability[i][0]
-        controllable = np.array(self.env.controllable)
-        ptc = np.intersect1d(pt,controllable)
+        action=-1
+        while True:
+            
+            assert q_values.ndim == 1
+            pt = np.array(self.env.possible_transitions())
+            uncontrollable = np.array(self.env.ncontrollable)
+            ptu = np.intersect1d(pt,uncontrollable)
+            probs = [self.env.probs[i] for i in ptu if self.env.probs[i]>0]
         
-        if ptc.size>0:
-            if np.random.uniform(0,1) < self.eps:
-                action = pt[random.randint(0,pt.size-1)]
+            if(len(probs) and ptu.size>0):
+                probability = []
+                for i in range(len(ptu)):
+                    pt = np.delete(pt, np.where(pt==ptu[i]))
+                    probability.append([ptu[i],probs[i]])
+                random.shuffle(probability)
+                for i in range(len(probability)):
+                    if(np.random.uniform(0,1)>probability[i][1]):
+                        return probability[i][0]
+            
+            
+            controllable = np.array(self.env.controllable)
+            ptc = np.intersect1d(pt,controllable)   
+        
+            if ptc.size>0:
+                if random.uniform(0,1) > self.eps:
+                    action = pt[random.randint(0,pt.size-1)]
+                else:
+                    action = ptc[np.argmax(q_values[ptc])]
             else:
-                action = ptc[np.argmax(q_values[ptc])]
-        else:
-            action = pt[random.randint(0,pt.size-1)]
-#        nb_actions = q_values.shape[0]
-#        if np.random.uniform() < self.eps:
-#            action = np.random.random_integers(0, nb_actions-1)
-#        else:
-#            action = np.argmax(q_values)
+                action = pt[random.randint(0,pt.size-1)]
+            
+            if action!=-1:
+                break
+                
         return action
+        
 
     def get_config(self):
         """Return configurations of EpsGreedyPolicy

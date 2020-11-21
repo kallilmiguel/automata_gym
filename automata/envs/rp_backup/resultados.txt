@@ -1,0 +1,135 @@
+Case number 1
+	Execution time: 37.332459926605225
+	Decision: [['sRi', -3.688617], ['sO[0]', -3.406401]]
+	Teste Inteligente
+		Episode: 1, Total Reward: 158900
+		Episode: 2, Total Reward: 198900
+		Episode: 3, Total Reward: 198900
+		Episode: 4, Total Reward: 198900
+		Episode: 5, Total Reward: 158900
+	Teste Aleatório
+		Episode: 1, Total Reward: 198660
+		Episode: 2, Total Reward: 198720
+		Episode: 3, Total Reward: 158480
+		Episode: 4, Total Reward: 198540
+		Episode: 5, Total Reward: 198600
+Case number 2
+	Execution time: 37.36198115348816
+	Decision: [['sRi', -3.7075322], ['sO[0]', -3.418084]]
+	Teste Inteligente
+		Episode: 1, Total Reward: 198900
+		Episode: 2, Total Reward: 158900
+		Episode: 3, Total Reward: 158900
+		Episode: 4, Total Reward: 158900
+		Episode: 5, Total Reward: 158900
+	Teste Aleatório
+		Episode: 1, Total Reward: 158540
+		Episode: 2, Total Reward: 158600
+		Episode: 3, Total Reward: 198600
+		Episode: 4, Total Reward: 148660
+		Episode: 5, Total Reward: 147390
+Case number 3
+	Execution time: 37.17182230949402
+	Decision: [['sRi', -3.7326643], ['sO[0]', -3.4330988]]
+	Teste Inteligente
+		Episode: 1, Total Reward: 158900
+		Episode: 2, Total Reward: 198900
+		Episode: 3, Total Reward: 118900
+		Episode: 4, Total Reward: 158900
+		Episode: 5, Total Reward: 198900
+	Teste Aleatório
+		Episode: 1, Total Reward: 197630
+		Episode: 2, Total Reward: -32490
+		Episode: 3, Total Reward: 148480
+		Episode: 4, Total Reward: 157570
+		Episode: 5, Total Reward: 166360
+Case number 4
+	Execution time: 37.19628691673279
+	Decision: [['sRi', -3.688617], ['sO[0]', -3.4522355]]
+	Teste Inteligente
+		Episode: 1, Total Reward: 118900
+		Episode: 2, Total Reward: 198900
+		Episode: 3, Total Reward: 198900
+		Episode: 4, Total Reward: 198900
+		Episode: 5, Total Reward: 158900
+	Teste Aleatório
+		Episode: 1, Total Reward: 98600
+		Episode: 2, Total Reward: 67570
+		Episode: 3, Total Reward: 116540
+		Episode: 4, Total Reward: 216420
+		Episode: 5, Total Reward: 98540
+Case number 5
+	Execution time: 37.1828134059906
+	Decision: [['sRi', -3.720111], ['sO[0]', -3.4888656]]
+	Teste Inteligente
+		Episode: 1, Total Reward: 118900
+		Episode: 2, Total Reward: 118900
+		Episode: 3, Total Reward: 198900
+		Episode: 4, Total Reward: 198900
+		Episode: 5, Total Reward: 118900
+	Teste Aleatório
+		Episode: 1, Total Reward: -2550
+		Episode: 2, Total Reward: 177570
+		Episode: 3, Total Reward: 47450
+		Episode: 4, Total Reward: 198720
+		Episode: 5, Total Reward: 156600
+Case number 6
+	Execution time: 37.370137214660645
+	Decision: [['sRi', -3.7075322], ['sO[0]', -3.3978927]]
+	Teste Inteligente
+		Episode: 1, Total Reward: 198900
+		Episode: 2, Total Reward: 118900
+		Episode: 3, Total Reward: 198900
+		Episode: 4, Total Reward: 198900
+		Episode: 5, Total Reward: 158900
+	Teste Aleatório
+		Episode: 1, Total Reward: 6420
+		Episode: 2, Total Reward: 98600
+		Episode: 3, Total Reward: 146600
+		Episode: 4, Total Reward: -34550
+		Episode: 5, Total Reward: 47570
+Case number 7
+	Execution time: 39.47759127616882
+	Decision: [['sRi', -3.6442602], ['sO[0]', -3.3051846]]
+	Teste Inteligente
+		Episode: 1, Total Reward: 198900
+		Episode: 2, Total Reward: 198900
+		Episode: 3, Total Reward: 158900
+		Episode: 4, Total Reward: 198900
+		Episode: 5, Total Reward: 198900
+	Teste Aleatório
+		Episode: 1, Total Reward: 107750
+		Episode: 2, Total Reward: -153640
+		Episode: 3, Total Reward: -2370
+		Episode: 4, Total Reward: 117630
+		Episode: 5, Total Reward: 107570
+Case number 8
+	Execution time: 37.7480902671814
+	Decision: [['sRi', -3.7138247], ['sO[0]', -3.491336]]
+	Teste Inteligente
+		Episode: 1, Total Reward: 158900
+		Episode: 2, Total Reward: 198900
+		Episode: 3, Total Reward: 198900
+		Episode: 4, Total Reward: 198900
+		Episode: 5, Total Reward: 198900
+	Teste Aleatório
+		Episode: 1, Total Reward: -52430
+		Episode: 2, Total Reward: -52490
+		Episode: 3, Total Reward: -47640
+		Episode: 4, Total Reward: 47570
+		Episode: 5, Total Reward: 76600
+Case number 9
+	Execution time: 39.975895404815674
+	Decision: [['sRi', -3.8012614], ['sO[0]', -3.6783211]]
+	Teste Inteligente
+		Episode: 1, Total Reward: 198900
+		Episode: 2, Total Reward: 198900
+		Episode: 3, Total Reward: 198900
+		Episode: 4, Total Reward: 158900
+		Episode: 5, Total Reward: 158900
+	Teste Aleatório
+		Episode: 1, Total Reward: -92430
+		Episode: 2, Total Reward: 45570
+		Episode: 3, Total Reward: -2430
+		Episode: 4, Total Reward: -155640
+		Episode: 5, Total Reward: -34490

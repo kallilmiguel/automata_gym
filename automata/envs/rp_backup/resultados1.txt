@@ -1,0 +1,12 @@
+Teste Inteligente
+Episode: 1, Total Reward: 159080
+Episode: 2, Total Reward: 159080
+Episode: 3, Total Reward: 159080
+Episode: 4, Total Reward: 159080
+Episode: 5, Total Reward: 159080
+Teste Aleatório
+Episode: 1, Total Reward: 159070
+Episode: 2, Total Reward: 119060
+Episode: 3, Total Reward: 89060
+Episode: 4, Total Reward: 159060
+Episode: 5, Total Reward: 139050
