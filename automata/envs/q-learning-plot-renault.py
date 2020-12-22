@@ -85,12 +85,12 @@ last_action=[0,1,10,11]
 
 for k in range(cases):
 
-    with open('rp/case'+str(k+1)+'.csv', newline='') as csvfile:
+    with open('rp/10-case'+str(k+1)+'.csv', newline='') as csvfile:
         data = list(csv.reader(csvfile))
     reward = list(map(int, data[1]))
     probabilities = list(map(float, data[2]))
     
-    env.reset("SM/Renault2.xml", rewards=reward, stop_crit=1, last_action=last_action, products=10, probs=probabilities)
+    env.reset("SM/Renault2_S.xml", rewards=reward, stop_crit=1, last_action=last_action, products=10, probs=probabilities)
     
     num_actions = env.action_space.n
     num_states = env.observation_space.n
@@ -202,16 +202,19 @@ for i in last_action:
 
 data = np.vstack((info_int, info_rdn))
 data = pd.DataFrame(data, columns=["mean reward", "Fail Probability", "method"])
-data.to_csv("data_sarsa.csv")
+data.to_csv("data_sarsa10.csv")
 states_int = pd.DataFrame(fsInt, columns=["Number of occurrences","Fail Probability", "event"])
 states_rdn = pd.DataFrame(fsRdn, columns=["Number of occurrences","Fail Probability", "event"])
-states_int.to_csv("final_states_sarsa_int.csv")
-states_rdn.to_csv("final_states_sarsa_random.csv")
-intel = pd.read_csv("final_states_sarsa_int.csv")
-randomic = pd.read_csv("final_states_sarsa_random.csv")
-df = pd.read_csv("data_sarsa.csv")
+states_int.to_csv("final_states_sarsa10_int.csv")
+states_rdn.to_csv("final_states_sarsa10_random.csv")
+
+
+
+intel = pd.read_csv("final_states_sarsa10_int.csv")
+randomic = pd.read_csv("final_states_sarsa10_random.csv")
+df = pd.read_csv("data_sarsa10.csv")
 plot = sns.lineplot(data=df, x="Fail Probability", y="mean reward", hue="method")
-plot.set_title("Graph for reward by making 10 cars over probability of success entering block C - 90% not entering")
+plot.set_title("Graph for reward by making 10 cars over probability of success entering block C - 50% not entering")
 
 
 sint = sns.barplot(data=intel, x="Fail Probability", y="Number of occurrences", hue="event")
