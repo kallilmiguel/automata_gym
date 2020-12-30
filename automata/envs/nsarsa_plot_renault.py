@@ -69,7 +69,7 @@ last_action=[0,1,10,11]
 
 for k in range(cases):
 
-    with open('rp/rw-5000-case'+str(k+1)+'.csv', newline='') as csvfile:
+    with open('testes/machineCost/case'+str(k+1)+'.csv', newline='') as csvfile:
         data = list(csv.reader(csvfile))
     reward = list(map(int, data[1]))
     probabilities = list(map(float, data[2]))
@@ -155,7 +155,6 @@ for k in range(cases):
         #env.render()
         
         done = False
-        sar=[]
         while not done:
             
             action = epsilon_greedy(env, epsilon, q_table, state)
@@ -167,12 +166,11 @@ for k in range(cases):
                 
            
             next_state, reward, done, info = env.step(action)
-            sar.append([state,action,reward])
             total_reward+=reward
             
             state = next_state
         
-        info_int.append((total_reward, 10*(k+1), "Supervisory+RL"))
+        info_int.append((total_reward, -1*env.reward[2], "Supervisory+RL"))
         print("\t\tEpisode: {}, Total Reward: {}".format(i+1, total_reward))
         
     #Testando decisões aleatórias
@@ -202,7 +200,7 @@ for k in range(cases):
             
             state = next_state
         
-        info_rdn.append((total_reward, 10*(k+1), "Supervisory"))
+        info_rdn.append((total_reward, -1*env.reward[2], "Supervisory"))
         print("\t\tEpisode: {}, Total Reward: {}".format(i+1, total_reward))
 
 
@@ -216,10 +214,10 @@ for i in last_actions:
         fsRdn.append((final_states_rdn.count((i,j+1)), 10*(j+1), env.mapping()[i][1]))
 
 data = np.vstack((info_int, info_rdn))
-data = pd.DataFrame(data, columns=["mean reward", "Fail Probability", "method"])
+data = pd.DataFrame(data, columns=["mean reward", "Machine Cost", "method"])
 data.to_csv("data_nsarsa_rw5000.csv")
-states_int = pd.DataFrame(fsInt, columns=["Number of occurrences","Fail Probability", "event"])
-states_rdn = pd.DataFrame(fsRdn, columns=["Number of occurrences","Fail Probability", "event"])
+states_int = pd.DataFrame(fsInt, columns=["Number of occurrences","Machine Cost", "event"])
+states_rdn = pd.DataFrame(fsRdn, columns=["Number of occurrences","Machine Cost", "event"])
 states_int.to_csv("final_states_nsarsa_rw5000_int.csv")
 states_rdn.to_csv("final_states_nsarsa_rw5000_random.csv")
 
@@ -228,10 +226,10 @@ states_rdn.to_csv("final_states_nsarsa_rw5000_random.csv")
 intel = pd.read_csv("final_states_nsarsa_rw5000_int.csv")
 randomic = pd.read_csv("final_states_nsarsa_rw5000_random.csv")
 df = pd.read_csv("data_nsarsa_rw5000.csv")
-plot = sns.lineplot(data=df, x="Fail Probability", y="mean reward", hue="method")
+plot = sns.lineplot(data=df, x="Machine Cost", y="mean reward", hue="method")
 
 
-sint = sns.barplot(data=intel, x="Fail Probability", y="Number of occurrences", hue="event")
+sint = sns.barplot(data=intel, x="Machine Cost", y="Number of occurrences", hue="event")
 
-srd = sns.barplot(data=randomic, x="Fail Probability", y="Number of occurrences", hue="event")
+srd = sns.barplot(data=randomic, x="Machine Cost", y="Number of occurrences", hue="event")
 
