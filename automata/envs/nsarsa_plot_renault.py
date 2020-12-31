@@ -16,6 +16,8 @@ import csv
 import pandas as pd
 import seaborn as sns
 
+
+
 def choose_action(env):
     pt = np.array(env.possible_transitions())
     action = pt[env.possible_space.sample()]
@@ -28,7 +30,7 @@ def epsilon_greedy(env, epsilon, q_table, state):
     ptu = np.intersect1d(pt,uncontrollable)
     probs = np.array([[ptu[i],env.probs[ptu[i]]] for i in range(len(ptu)) if env.probs[ptu[i]]>0])
     controllable = np.array(env.controllable)
-    ptc = np.intersect1d(pt,controllable)  
+    ptc = np.intersect1d(pt,controllable)
     
     actions = np.array([])
     if(probs.size>0):
@@ -66,10 +68,11 @@ info_rdn=[]
 final_states_int=[]
 final_states_rdn=[]
 last_action=[0,1,10,11]
+xValues=[]
 
 for k in range(cases):
 
-    with open('testes/machineCost/case'+str(k+1)+'.csv', newline='') as csvfile:
+    with open('testes/rework/case'+str(k+1)+'.csv', newline='') as csvfile:
         data = list(csv.reader(csvfile))
     reward = list(map(int, data[1]))
     probabilities = list(map(float, data[2]))
@@ -82,6 +85,9 @@ for k in range(cases):
     
     q_table = np.zeros([num_states, num_actions], dtype = np.float32)
         
+    #Alterar esse valor para aparecer no eixo x do gráfico
+    xValues.append(-env.reward[12])
+    
     lr = 0.1
     gamma = 0.9
     epsilon = 0.5
@@ -96,7 +102,7 @@ for k in range(cases):
     
         
     ##NStepSarsa
-    episodes = 5000
+    episodes = 300
     n=10
     start = time.time()
     for i in range(episodes):
@@ -170,7 +176,7 @@ for k in range(cases):
             
             state = next_state
         
-        info_int.append((total_reward, -1*env.reward[2], "Supervisory+RL"))
+        info_int.append((total_reward, xValues[k], "Supervisory+RL"))
         print("\t\tEpisode: {}, Total Reward: {}".format(i+1, total_reward))
         
     #Testando decisões aleatórias
@@ -200,9 +206,17 @@ for k in range(cases):
             
             state = next_state
         
-        info_rdn.append((total_reward, -1*env.reward[2], "Supervisory"))
+        info_rdn.append((total_reward, xValues[k], "Supervisory"))
         print("\t\tEpisode: {}, Total Reward: {}".format(i+1, total_reward))
 
+# Alterar dataname para salvar diferentes bases de dados
+dataname="rework"
+reward_dataname=dataname+"_reward.csv"
+occurrences_int_dataname=dataname+"_fsInt.csv"
+occurrences_rnd_dataname=dataname+"_fsRnd.csv"
+
+#nome do eixo x do gráfico
+xlabel_name="Rework Cost"
 
 fsInt=[]
 fsRdn=[]
@@ -210,26 +224,27 @@ last_actions.append(12)
 last_actions.append(13)
 for i in last_actions:
     for j in range(cases):
-        fsInt.append((final_states_int.count((i,j+1)), 10*(j+1), env.mapping()[i][1]))
-        fsRdn.append((final_states_rdn.count((i,j+1)), 10*(j+1), env.mapping()[i][1]))
+        fsInt.append((final_states_int.count((i,j+1)), xValues[j], env.mapping()[i][1]))
+        fsRdn.append((final_states_rdn.count((i,j+1)), xValues[j], env.mapping()[i][1]))
+
 
 data = np.vstack((info_int, info_rdn))
-data = pd.DataFrame(data, columns=["mean reward", "Machine Cost", "method"])
-data.to_csv("data_nsarsa_rw5000.csv")
-states_int = pd.DataFrame(fsInt, columns=["Number of occurrences","Machine Cost", "event"])
-states_rdn = pd.DataFrame(fsRdn, columns=["Number of occurrences","Machine Cost", "event"])
-states_int.to_csv("final_states_nsarsa_rw5000_int.csv")
-states_rdn.to_csv("final_states_nsarsa_rw5000_random.csv")
+data = pd.DataFrame(data, columns=["mean reward",  xlabel_name, "method"])
+data.to_csv(reward_dataname)
+states_int = pd.DataFrame(fsInt, columns=["Number of occurrences",xlabel_name, "event"])
+states_rdn = pd.DataFrame(fsRdn, columns=["Number of occurrences",xlabel_name, "event"])
+states_int.to_csv(occurrences_int_dataname)
+states_rdn.to_csv(occurrences_rnd_dataname)
 
 
 
-intel = pd.read_csv("final_states_nsarsa_rw5000_int.csv")
-randomic = pd.read_csv("final_states_nsarsa_rw5000_random.csv")
-df = pd.read_csv("data_nsarsa_rw5000.csv")
-plot = sns.lineplot(data=df, x="Machine Cost", y="mean reward", hue="method")
+intel = pd.read_csv(occurrences_int_dataname)
+randomic = pd.read_csv(occurrences_rnd_dataname)
+df = pd.read_csv(reward_dataname)
+plot = sns.lineplot(data=df, x=xlabel_name, y="mean reward", hue="method")
 
 
-sint = sns.barplot(data=intel, x="Machine Cost", y="Number of occurrences", hue="event")
+sint = sns.barplot(data=intel, x=xlabel_name, y="Number of occurrences", hue="event")
 
-srd = sns.barplot(data=randomic, x="Machine Cost", y="Number of occurrences", hue="event")
+srd = sns.barplot(data=randomic, x=xlabel_name, y="Number of occurrences", hue="event")
 
