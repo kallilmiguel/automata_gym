@@ -72,7 +72,7 @@ xValues=[]
 
 for k in range(cases):
 
-    with open('testes/rework/case'+str(k+1)+'.csv', newline='') as csvfile:
+    with open('testes/machineCost/case'+str(k+1)+'.csv', newline='') as csvfile:
         data = list(csv.reader(csvfile))
     reward = list(map(int, data[1]))
     probabilities = list(map(float, data[2]))
@@ -86,7 +86,7 @@ for k in range(cases):
     q_table = np.zeros([num_states, num_actions], dtype = np.float32)
         
     #Alterar esse valor para aparecer no eixo x do gráfico
-    xValues.append(-env.reward[12])
+    xValues.append(-env.reward[2])
     
     lr = 0.1
     gamma = 0.9
@@ -102,7 +102,7 @@ for k in range(cases):
     
         
     ##NStepSarsa
-    episodes = 300
+    episodes = 1000
     n=10
     start = time.time()
     for i in range(episodes):
@@ -210,41 +210,90 @@ for k in range(cases):
         print("\t\tEpisode: {}, Total Reward: {}".format(i+1, total_reward))
 
 # Alterar dataname para salvar diferentes bases de dados
-dataname="rework"
+dataname="machineCost"
 reward_dataname=dataname+"_reward.csv"
 occurrences_int_dataname=dataname+"_fsInt.csv"
 occurrences_rnd_dataname=dataname+"_fsRnd.csv"
+occurrences_redo_int = dataname+"_redoInt.csv"
+occurrences_redo_rdn = dataname+"_redoRdn.csv"
 
 #nome do eixo x do gráfico
-xlabel_name="Rework Cost"
+xlabel_name="Machine Cost"
 
 fsInt=[]
 fsRdn=[]
+redo=[]
 last_actions.append(12)
 last_actions.append(13)
 for i in last_actions:
     for j in range(cases):
         fsInt.append((final_states_int.count((i,j+1)), xValues[j], env.mapping()[i][1]))
         fsRdn.append((final_states_rdn.count((i,j+1)), xValues[j], env.mapping()[i][1]))
+        if i==12 or i==13:
+            redo.append((final_states_int.count((i,j+1)),xValues[j],env.mapping()[i][1],"Supervisory+RL"))
+            redo.append((final_states_rdn.count((i,j+1)),xValues[j],env.mapping()[i][1],"Supervisory"))
 
+
+        
+list2Int=[]
+redoInt=[]
+redoRdn=[]
+for i in range(0,9):
+    list2Int.append((fsInt[i][1],fsInt[i][0], fsInt[i+9][0],fsInt[i+18][0],fsInt[i+27][0]))
+    redoInt.append((fsInt[i][1],fsInt[i+36][0],fsInt[i+45][0]))
+
+list2Rdn=[]
+for i in range(0,9):
+    list2Rdn.append((fsRdn[i][1],fsRdn[i][0], fsRdn[i+9][0],fsRdn[i+18][0],fsRdn[i+27][0]))
+    redoRdn.append((fsRdn[i][1],fsRdn[i+36][0],fsRdn[i+45][0]))
 
 data = np.vstack((info_int, info_rdn))
 data = pd.DataFrame(data, columns=["mean reward",  xlabel_name, "method"])
+states_int = pd.DataFrame(list2Int,columns=[xlabel_name,"Rejection Type 1","Rejection Type 2", "Approval Type 1","Approval Type 2"])
+states_rdn = pd.DataFrame(list2Rdn, columns=[xlabel_name,"Rejection Type 1","Rejection Type 2", "Approval Type 1","Approval Type 2"])
+redoInt = pd.DataFrame(redoInt, columns=[xlabel_name,"Rework Type 1","Rework Type 2"])
+redoRdn = pd.DataFrame(redoRdn, columns=[xlabel_name,"Rework Type 1","Rework Type 2"])
+
 data.to_csv(reward_dataname)
-states_int = pd.DataFrame(fsInt, columns=["Number of occurrences",xlabel_name, "event"])
-states_rdn = pd.DataFrame(fsRdn, columns=["Number of occurrences",xlabel_name, "event"])
 states_int.to_csv(occurrences_int_dataname)
 states_rdn.to_csv(occurrences_rnd_dataname)
-
+redoInt.to_csv(occurrences_redo_int)
+redoRdn.to_csv(occurrences_redo_rdn)
 
 
 intel = pd.read_csv(occurrences_int_dataname)
 randomic = pd.read_csv(occurrences_rnd_dataname)
 df = pd.read_csv(reward_dataname)
-plot = sns.lineplot(data=df, x=xlabel_name, y="mean reward", hue="method")
+redoInt = pd.read_csv(occurrences_redo_int)
+redoRdn = pd.read_csv(occurrences_redo_rdn)
 
 
-sint = sns.barplot(data=intel, x=xlabel_name, y="Number of occurrences", hue="event")
+intel = intel.drop(["Unnamed: 0"],axis=1)
+randomic = randomic.drop(["Unnamed: 0"], axis=1)
+redoInt = redoInt.drop(["Unnamed: 0"], axis=1)
+redoRdn = redoRdn.drop(["Unnamed: 0"], axis=1)
 
-srd = sns.barplot(data=randomic, x=xlabel_name, y="Number of occurrences", hue="event")
+
+plt = intel.plot.bar(x=xlabel_name, stacked=True)
+plt.set_xlabel(xlabel_name)
+plt.set_ylabel("Number of Occurrences")
+
+plt = randomic.plot.bar(x=xlabel_name, stacked=True)
+plt.set_xlabel(xlabel_name)
+plt.set_ylabel("Number of Occurrences")
+
+
+# plot = sns.lineplot(data=df, x=xlabel_name, y="mean reward", hue="method")
+
+
+plt = redoInt.plot.bar(x=xlabel_name, stacked=True)
+plt.set_xlabel(xlabel_name)
+plt.set_ylabel("Number of Occurrences")
+
+plt = redoRdn.plot.bar(x=xlabel_name, stacked=True)
+plt.set_xlabel(xlabel_name)
+plt.set_ylabel("Number of Occurrences")
+
+
+sns.catplot(x=xlabel_name,y="Number of Occurrences", col="Method", hue="Event",data=redo, kind="bar")
 
