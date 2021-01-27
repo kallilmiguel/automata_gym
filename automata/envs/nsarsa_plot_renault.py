@@ -60,6 +60,12 @@ def q_possible():
         q_p.append([mp[env.possible_transitions()[i]], q_table[env.actual_state][env.possible_transitions()[i]]])
     return q_p
 
+env_dict = gym.envs.registration.registry.env_specs.copy()
+for env in env_dict:
+    if 'automata-v0' in env:
+        print("Remove {} from registry".format(env))
+        del gym.envs.registration.registry.env_specs[env]
+
 
 env = gym.make('automata:automata-v0')
 cases=9
@@ -72,12 +78,16 @@ xValues=[]
 
 for k in range(cases):
 
-    with open('testes/machineCost/case'+str(k+1)+'.csv', newline='') as csvfile:
+    with open('testes/good_A_cost/case'+str(k+1)+'.csv', newline='') as csvfile:
         data = list(csv.reader(csvfile))
     reward = list(map(int, data[1]))
     probabilities = list(map(float, data[2]))
     
+    start = time.time()
     env.reset("SM/Renault2.xml", rewards=reward, stop_crit=1, last_action=last_action, products=10, probs=probabilities)
+    end = time.time()
+    
+    print(end-start)
     
     last_actions=last_action
     num_actions = env.action_space.n
@@ -86,7 +96,7 @@ for k in range(cases):
     q_table = np.zeros([num_states, num_actions], dtype = np.float32)
         
     #Alterar esse valor para aparecer no eixo x do gráfico
-    xValues.append(-env.reward[2])
+    xValues.append(100*env.probs[0])
     
     lr = 0.1
     gamma = 0.9
@@ -95,14 +105,11 @@ for k in range(cases):
     bad=[1011]
     #bad = [457,257,912,259,304,1226,888,1220,313,672]
     
-    l=[]
-    for i in env.transitions:
-        if(i[2]==22 or i[2]==21 or i[2]==20 or i[2]==19):
-            l.append(i[0])
+    
     
         
     ##NStepSarsa
-    episodes = 1000
+    episodes = 3000
     n=10
     start = time.time()
     for i in range(episodes):
@@ -136,10 +143,6 @@ for k in range(cases):
                 if(tau+n<T):
                     G = G+(gamma**n)*q_table[S[tau+n],A[tau+n]]
                 q_table[S[tau],A[tau]] += lr*(G-q_table[S[tau],A[tau]])
-                # if(S[tau] in bad and i>100):
-                #     print(S[tau])
-                #     print(A[tau])
-                #     print("Alô youtube")50005000
             if(tau==T-1):
                 break
             t+=1
@@ -210,15 +213,16 @@ for k in range(cases):
         print("\t\tEpisode: {}, Total Reward: {}".format(i+1, total_reward))
 
 # Alterar dataname para salvar diferentes bases de dados
-dataname="machineCost"
-reward_dataname=dataname+"_reward.csv"
-occurrences_int_dataname=dataname+"_fsInt.csv"
-occurrences_rnd_dataname=dataname+"_fsRnd.csv"
-occurrences_redo_int = dataname+"_redoInt.csv"
-occurrences_redo_rdn = dataname+"_redoRdn.csv"
+directory="dados/"
+dataname="bad_A_cost"
+reward_dataname=directory+dataname+"_reward.csv"
+occurrences_int_dataname=directory+dataname+"_fsInt.csv"
+occurrences_rnd_dataname=directory+dataname+"_fsRnd.csv"
+occurrences_redo_int = directory+dataname+"_redo.csv"
+
 
 #nome do eixo x do gráfico
-xlabel_name="Machine Cost"
+xlabel_name="Rejection Type 1 Cost"
 
 fsInt=[]
 fsRdn=[]
@@ -240,39 +244,45 @@ redoInt=[]
 redoRdn=[]
 for i in range(0,9):
     list2Int.append((fsInt[i][1],fsInt[i][0], fsInt[i+9][0],fsInt[i+18][0],fsInt[i+27][0]))
-    redoInt.append((fsInt[i][1],fsInt[i+36][0],fsInt[i+45][0]))
+    #redoInt.append((fsInt[i][1],fsInt[i+36][0],fsInt[i+45][0]))
 
 list2Rdn=[]
 for i in range(0,9):
     list2Rdn.append((fsRdn[i][1],fsRdn[i][0], fsRdn[i+9][0],fsRdn[i+18][0],fsRdn[i+27][0]))
-    redoRdn.append((fsRdn[i][1],fsRdn[i+36][0],fsRdn[i+45][0]))
+    #redoRdn.append((fsRdn[i][1],fsRdn[i+36][0],fsRdn[i+45][0]))
 
 data = np.vstack((info_int, info_rdn))
 data = pd.DataFrame(data, columns=["mean reward",  xlabel_name, "method"])
 states_int = pd.DataFrame(list2Int,columns=[xlabel_name,"Rejection Type 1","Rejection Type 2", "Approval Type 1","Approval Type 2"])
 states_rdn = pd.DataFrame(list2Rdn, columns=[xlabel_name,"Rejection Type 1","Rejection Type 2", "Approval Type 1","Approval Type 2"])
-redoInt = pd.DataFrame(redoInt, columns=[xlabel_name,"Rework Type 1","Rework Type 2"])
-redoRdn = pd.DataFrame(redoRdn, columns=[xlabel_name,"Rework Type 1","Rework Type 2"])
+redo = pd.DataFrame(redo, columns=["Number of Occurrences", xlabel_name, "Event", "Method"])
+#redoRdn = pd.DataFrame(redoRdn, columns=[xlabel_name,"Rework Type 1","Rework Type 2"])
 
 data.to_csv(reward_dataname)
 states_int.to_csv(occurrences_int_dataname)
 states_rdn.to_csv(occurrences_rnd_dataname)
-redoInt.to_csv(occurrences_redo_int)
-redoRdn.to_csv(occurrences_redo_rdn)
+redo.to_csv(occurrences_redo_int)
+# redoRdn.to_csv(occurrences_redo_rdn)
 
 
 intel = pd.read_csv(occurrences_int_dataname)
 randomic = pd.read_csv(occurrences_rnd_dataname)
 df = pd.read_csv(reward_dataname)
-redoInt = pd.read_csv(occurrences_redo_int)
-redoRdn = pd.read_csv(occurrences_redo_rdn)
+redo = pd.read_csv(occurrences_redo_int)
+# redoRdn = pd.read_csv(occurrences_redo_rdn)
 
 
 intel = intel.drop(["Unnamed: 0"],axis=1)
 randomic = randomic.drop(["Unnamed: 0"], axis=1)
-redoInt = redoInt.drop(["Unnamed: 0"], axis=1)
-redoRdn = redoRdn.drop(["Unnamed: 0"], axis=1)
+redo = redo.drop(["Unnamed: 0"], axis=1)
+# redoRdn = redoRdn.drop(["Unnamed: 0"], axis=1)
 
+redoRelation = redo.values.tolist()
+intel = intel.values.tolist()
+randomic = randomic.values.tolist()
+
+
+plot = sns.lineplot(data=df, x=xlabel_name, y="mean reward", hue="method")
 
 plt = intel.plot.bar(x=xlabel_name, stacked=True)
 plt.set_xlabel(xlabel_name)
@@ -283,17 +293,44 @@ plt.set_xlabel(xlabel_name)
 plt.set_ylabel("Number of Occurrences")
 
 
-# plot = sns.lineplot(data=df, x=xlabel_name, y="mean reward", hue="method")
+a=[]
+for i in range(len(redoRelation)):
+    for j in range(len(intel)):
+        if(redoRelation[i][1]==intel[j][0] and redoRelation[i][3]=='Supervisory+RL'):
+            if(redoRelation[i][2]=='redo_A'):
+                if(intel[j][1]+intel[j][3]!=0):
+                    a.append((redoRelation[i][0]/(intel[j][1]+intel[j][3]), 'Rework Type 1', redoRelation[i][3], redoRelation[i][1])) 
+                else:
+                    a.append((0, 'Rework Type 1', redoRelation[i][3], redoRelation[i][1])) 
+            else:
+                if(intel[j][2]+intel[j][4]!=0):
+                    a.append((redoRelation[i][0]/(intel[j][2]+intel[j][4]), 'Rework Type 2', redoRelation[i][3], redoRelation[i][1]))
+                else:
+                    a.append((0, 'Rework Type 2', redoRelation[i][3], redoRelation[i][1])) 
+        if(redoRelation[i][3]=='Supervisory' and redoRelation[i][1]==randomic[j][0]):
+            if(redoRelation[i][2]=='redo_A'):
+               if(randomic[j][1]+randomic[j][3]!=0):
+                     a.append((redoRelation[i][0]/(randomic[j][1]+randomic[j][3]), 'Rework Type 1', redoRelation[i][3], redoRelation[i][1])) 
+               else:
+                     a.append((0, 'Rework Type 1', redoRelation[i][3], redoRelation[i][1]))
+            else:
+                if(randomic[j][2]+randomic[j][4]!=0):
+                    a.append((redoRelation[i][0]/(randomic[j][2]+randomic[j][4]), 'Rework Type 2', redoRelation[i][3], redoRelation[i][1]))
+                else:
+                    a.append((0, 'Rework Type 2', redoRelation[i][3], redoRelation[i][1]))
+                    
+a = pd.DataFrame(a, columns=["Reworks/Cars Produced", "Event", "Method", xlabel_name])
+
+sns.lineplot(x=xlabel_name, y="Reworks/Cars Produced", style="Method", hue="Event", data=a, markers=True)
 
 
-plt = redoInt.plot.bar(x=xlabel_name, stacked=True)
-plt.set_xlabel(xlabel_name)
-plt.set_ylabel("Number of Occurrences")
+# plt = redoInt.plot.bar(x=xlabel_name, stacked=True)
+# plt.set_xlabel(xlabel_name)
+# plt.set_ylabel("Number of Occurrences")
 
-plt = redoRdn.plot.bar(x=xlabel_name, stacked=True)
-plt.set_xlabel(xlabel_name)
-plt.set_ylabel("Number of Occurrences")
+# plt = redoRdn.plot.line(x=xlabel_name, stacked=True)
+# plt.set_xlabel(xlabel_name)
+# plt.set_ylabel("Number of Occurrences")
 
 
-sns.catplot(x=xlabel_name,y="Number of Occurrences", col="Method", hue="Event",data=redo, kind="bar")
 
