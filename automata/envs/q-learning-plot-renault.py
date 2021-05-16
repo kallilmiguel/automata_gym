@@ -10,7 +10,6 @@ import gym
 import random
 import numpy as np
 import time
-from policy import CustomEpsGreedyQPolicy
 import matplotlib.pyplot as plt
 import csv 
 import pandas as pd
@@ -190,7 +189,7 @@ for k in range(cases):
 
 # Alterar dataname para salvar diferentes bases de dados
 directory="dados/"
-dataname="approveA-90"
+dataname="sarsa"
 reward_dataname=directory+dataname+"_reward.csv"
 occurrences_int_dataname=directory+dataname+"_fsInt.csv"
 occurrences_rnd_dataname=directory+dataname+"_fsRnd.csv"

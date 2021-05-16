@@ -10,7 +10,7 @@ import gym
 import random
 import numpy as np
 import time
-from policy import CustomEpsGreedyQPolicy
+#from policy import CustomEpsGreedyQPolicy
 import matplotlib.pyplot as plt
 import csv 
 import pandas as pd
@@ -78,7 +78,7 @@ xValues=[]
 
 for k in range(cases):
 
-    with open('testes/good_A_cost/case'+str(k+1)+'.csv', newline='') as csvfile:
+    with open('testes/approve-A-90/case'+str(k+1)+'.csv', newline='') as csvfile:
         data = list(csv.reader(csvfile))
     reward = list(map(int, data[1]))
     probabilities = list(map(float, data[2]))
@@ -214,7 +214,7 @@ for k in range(cases):
 
 # Alterar dataname para salvar diferentes bases de dados
 directory="dados/"
-dataname="bad_A_cost"
+dataname="approve-A-90"
 reward_dataname=directory+dataname+"_reward.csv"
 occurrences_int_dataname=directory+dataname+"_fsInt.csv"
 occurrences_rnd_dataname=directory+dataname+"_fsRnd.csv"
@@ -222,7 +222,7 @@ occurrences_redo_int = directory+dataname+"_redo.csv"
 
 
 #nome do eixo x do gráfico
-xlabel_name="Rejection Type 1 Cost"
+xlabel_name="xl"
 
 fsInt=[]
 fsRdn=[]
@@ -252,7 +252,7 @@ for i in range(0,9):
     #redoRdn.append((fsRdn[i][1],fsRdn[i+36][0],fsRdn[i+45][0]))
 
 data = np.vstack((info_int, info_rdn))
-data = pd.DataFrame(data, columns=["mean reward",  xlabel_name, "method"])
+data = pd.DataFrame(data, columns=["yl",  xlabel_name, "method"])
 states_int = pd.DataFrame(list2Int,columns=[xlabel_name,"Rejection Type 1","Rejection Type 2", "Approval Type 1","Approval Type 2"])
 states_rdn = pd.DataFrame(list2Rdn, columns=[xlabel_name,"Rejection Type 1","Rejection Type 2", "Approval Type 1","Approval Type 2"])
 redo = pd.DataFrame(redo, columns=["Number of Occurrences", xlabel_name, "Event", "Method"])
@@ -277,10 +277,6 @@ randomic = randomic.drop(["Unnamed: 0"], axis=1)
 redo = redo.drop(["Unnamed: 0"], axis=1)
 # redoRdn = redoRdn.drop(["Unnamed: 0"], axis=1)
 
-redoRelation = redo.values.tolist()
-intel = intel.values.tolist()
-randomic = randomic.values.tolist()
-
 
 plot = sns.lineplot(data=df, x=xlabel_name, y="mean reward", hue="method")
 
@@ -291,6 +287,10 @@ plt.set_ylabel("Number of Occurrences")
 plt = randomic.plot.bar(x=xlabel_name, stacked=True)
 plt.set_xlabel(xlabel_name)
 plt.set_ylabel("Number of Occurrences")
+
+redoRelation = redo.values.tolist()
+intel = intel.values.tolist()
+randomic = randomic.values.tolist()
 
 
 a=[]

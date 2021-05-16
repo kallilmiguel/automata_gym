@@ -16,10 +16,11 @@ class automataEnv(gym.Env):
   def step(self, action):
       flag = True
       done = False
-      for trans in self.transitions: 
-          if(trans[0] == self.actual_state and trans[2] == action): 
+      indexes = self.binary_search_transitions()
+      for index in indexes: 
+          if(self.transitions[index][2] == action): 
             self.last_state = self.actual_state
-            self.actual_state = trans[1]
+            self.actual_state = self.transitions[index][1]
             flag = False
             if(self.stop_crit==0):
                 if(self.actual_state in self.terminal and self.last_action == action):
@@ -35,6 +36,8 @@ class automataEnv(gym.Env):
                 if(self.counter >= self.last_action):
                     done=True
             break
+        
+        
       if(flag==True):
         print("Transição inválida - {},{}".format(self.actual_state, action))
         return self.actual_state, 0, done, {"prob" : 1.0}
@@ -134,10 +137,48 @@ class automataEnv(gym.Env):
 
   def possible_transitions(self):
       possible_transitions = []
-      for transition in self.transitions:
-          if(self.actual_state == transition[0]):
-              possible_transitions.append(transition[2])
+      indexes = self.binary_search_transitions()
+      for index in indexes:
+          possible_transitions.append(self.transitions[index][2])
               
       self.possible_space = spaces.Discrete(len(possible_transitions))
                 
       return possible_transitions
+  
+    
+  def binary_search_transitions(self):
+    state_indexes = []
+    right = len(self.transitions)-1
+    left = 0
+      
+    
+    while(True):
+        search_index = (int)((right+left)/2)
+        if(self.transitions[search_index][0] == self.actual_state):
+            state_indexes.append(search_index)
+            
+            indexMinus = search_index-1
+            indexPlus = search_index+1
+            
+            while(self.transitions[indexMinus][0] == self.actual_state):
+                state_indexes.append(indexMinus)
+                indexMinus-=1
+               
+            while(self.transitions[indexPlus][0] == self.actual_state):
+                state_indexes.append(indexPlus)
+                indexPlus-=1
+            
+            return state_indexes
+        
+        elif(self.transitions[search_index][0] < self.actual_state):
+            left = search_index+1  
+        else:
+            right = search_index-1
+            
+                
+    
+      
+                  
+                
+      
+      
